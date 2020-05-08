@@ -11,13 +11,13 @@ import javafx.beans.property.SimpleStringProperty;
  * 
  * @author sscerbatiuc
  */
-public class Employee {
+public class EmployeeModel {
 
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;
     private SimpleIntegerProperty age;
 
-    public Employee(int id, String name, int age)  {
+    public EmployeeModel(int id, String name, int age)  {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.age = new SimpleIntegerProperty(age);
@@ -49,7 +49,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "id: " + id.get() + " - " + "name: " + name.get()+ "age: "+ age.get();
+        return "id: " + id.get() + " - " + " name: " + name.get()+ " age: "+ age.get();
     }
 
 }

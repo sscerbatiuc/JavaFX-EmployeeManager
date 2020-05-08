@@ -1,11 +1,12 @@
 package edu.step.javafxtabledemo;
 
-import edu.step.javafxtabledemo.model.Employee;
+import edu.step.javafxtabledemo.model.EmployeeModel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 public class MainSceneController implements Initializable {
 
     @FXML
-    private TableView<Employee> tvData;
+    private TableView<EmployeeModel> tvData;
     @FXML
     private TableColumn colId;
     @FXML
@@ -34,7 +35,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private TableColumn colAge;
 
-    private final ObservableList<Employee> tvObservableList = FXCollections.observableArrayList();
+    private final ObservableList<EmployeeModel> tvObservableList = FXCollections.observableArrayList();
 
     @FXML
     void onOpenAddDialog(ActionEvent event) throws IOException {
@@ -92,5 +93,16 @@ public class MainSceneController implements Initializable {
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
         tvData.setItems(tvObservableList);
         tvData.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        tvObservableList.addListener((ListChangeListener) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                   // DAO.addEmployee()
+                    System.out.println(tvObservableList.get(change.getFrom()));
+                } else if (change.wasUpdated()){
+                    // DAO.updateEmployee();
+                }
+            }
+        });
     }
 }

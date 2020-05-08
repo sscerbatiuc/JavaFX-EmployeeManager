@@ -1,6 +1,6 @@
 package edu.step.javafxtabledemo;
 
-import edu.step.javafxtabledemo.model.Employee;
+import edu.step.javafxtabledemo.model.EmployeeModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -28,7 +28,7 @@ public class EditDialogController implements Initializable {
     private TextField tfAge;
 
     private Integer editedIndex;
-    private ObservableList<Employee> appMainObservableList;
+    private ObservableList<EmployeeModel> appMainObservableList;
 
     @FXML
     void btnEditPersonClicked(ActionEvent event) {
@@ -36,13 +36,13 @@ public class EditDialogController implements Initializable {
         String name = tfName.getText().trim();
         int iAge = Integer.valueOf(tfAge.getText().trim());
 
-        Employee data = new Employee(id, name, iAge);
+        EmployeeModel data = new EmployeeModel(id, name, iAge);
         appMainObservableList.set(this.editedIndex, data);
 
         closeStage(event);
     }
 
-    public void setObservableList(ObservableList<Employee> tvObservableList, Integer editedIndex) {
+    public void setObservableList(ObservableList<EmployeeModel> tvObservableList, Integer editedIndex) {
         this.appMainObservableList = tvObservableList;
         this.editedIndex = editedIndex;
         this.tfId.setText(String.valueOf(tvObservableList.get(editedIndex).getId()));

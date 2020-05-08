@@ -1,6 +1,6 @@
 package edu.step.javafxtabledemo;
 
-import edu.step.javafxtabledemo.model.Employee;
+import edu.step.javafxtabledemo.model.EmployeeModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -27,7 +27,7 @@ public class AddDialogController implements Initializable {
     @FXML
     private TextField tfAge;
     
-    private ObservableList<Employee> appMainObservableList;
+    private ObservableList<EmployeeModel> appMainObservableList;
 
     @FXML
     void btnAddPersonClicked(ActionEvent event) {
@@ -35,13 +35,13 @@ public class AddDialogController implements Initializable {
         String name = tfName.getText().trim();
         int iAge = Integer.valueOf(tfAge.getText().trim());
         
-        Employee data = new Employee(id, name, iAge);
+        EmployeeModel data = new EmployeeModel(id, name, iAge);
         appMainObservableList.add(data);
         
         closeStage(event);
     }
 
-    public void setAppMainObservableList(ObservableList<Employee> tvObservableList) {
+    public void setAppMainObservableList(ObservableList<EmployeeModel> tvObservableList) {
         this.appMainObservableList = tvObservableList;
         
     }
