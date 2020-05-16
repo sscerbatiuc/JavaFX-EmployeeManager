@@ -1,23 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.step.javafxtabledemo.model;
+
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
- * 
  * @author sscerbatiuc
  */
 public class EmployeeModel {
 
-    private SimpleIntegerProperty id;
-    private SimpleStringProperty name;
-    private SimpleIntegerProperty age;
+    private IntegerProperty id;
+    private StringProperty name;
+    private IntegerProperty age;
 
-    public EmployeeModel(int id, String name, int age)  {
+    public EmployeeModel(int id, String name, int age) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.age = new SimpleIntegerProperty(age);
@@ -28,7 +25,7 @@ public class EmployeeModel {
     }
 
     public void setId(int ID) {
-        this.id.set(ID);
+        this.id.setValue(ID);
     }
 
     public String getName() {
@@ -36,7 +33,7 @@ public class EmployeeModel {
     }
 
     public void setName(String nme) {
-        this.name.set(nme);
+        this.name.setValue(nme);
     }
 
     public int getAge() {
@@ -44,12 +41,25 @@ public class EmployeeModel {
     }
 
     public void setAge(int age) {
-        this.age.set(age);
+        this.age.setValue(age);
+    }
+
+
+    public IntegerProperty idProperty() {
+        return this.id;
+    }
+
+    public StringProperty nameProperty() {
+        return this.name;
+    }
+
+    public IntegerProperty ageProperty() {
+        return this.age;
     }
 
     @Override
     public String toString() {
-        return "id: " + id.get() + " - " + " name: " + name.get()+ " age: "+ age.get();
+        return "id: " + id.get() + " - " + " name: " + name.get() + " age: " + age.get();
     }
 
 }

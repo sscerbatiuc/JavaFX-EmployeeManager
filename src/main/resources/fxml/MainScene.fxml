@@ -8,11 +8,11 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="400.0" minHeight="359.0" minWidth="394.0" prefHeight="359.0" prefWidth="394.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.step.javafxtabledemo.MainSceneController">
+<AnchorPane maxHeight="400.0" minHeight="359.0" minWidth="394.0" prefHeight="359.0" prefWidth="396.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.step.javafxtabledemo.MainSceneController">
     <children>
           <Button layoutX="283.0" layoutY="39.0" mnemonicParsing="false" onAction="#onOpenAddDialog" prefHeight="25.0" prefWidth="103.0" text="Add Employee" />
           <Button layoutX="283.0" layoutY="71.0" mnemonicParsing="false" onAction="#onOpenEditDialog" prefHeight="25.0" prefWidth="103.0" text="Edit Employee" />
-          <TableView fx:id="tvData" layoutX="14.0" layoutY="39.0" prefHeight="300.0" prefWidth="256.0">
+          <TableView fx:id="table" layoutX="14.0" layoutY="39.0" prefHeight="300.0" prefWidth="256.0">
               <columns>
                   <TableColumn fx:id="colId" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="colName" prefWidth="75.0" text="Name" />

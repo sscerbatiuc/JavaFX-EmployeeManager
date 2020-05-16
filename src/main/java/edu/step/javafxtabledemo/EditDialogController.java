@@ -29,26 +29,22 @@ public class EditDialogController implements Initializable {
 
     private Integer editedIndex;
     private ObservableList<EmployeeModel> appMainObservableList;
-
+    
+    public EmployeeModel result;
+    
     @FXML
     void btnEditPersonClicked(ActionEvent event) {
-        int id = Integer.valueOf(tfId.getText().trim());
-        String name = tfName.getText().trim();
-        int iAge = Integer.valueOf(tfAge.getText().trim());
-
-        EmployeeModel data = new EmployeeModel(id, name, iAge);
-        appMainObservableList.set(this.editedIndex, data);
-
+        int editedId = Integer.valueOf(tfId.getText().trim());
+        String editedName = tfName.getText().trim();
+        int editedAge = Integer.valueOf(tfAge.getText().trim());
+        this.result = new EmployeeModel(editedId, editedName, editedAge);
         closeStage(event);
     }
 
-    public void setObservableList(ObservableList<EmployeeModel> tvObservableList, Integer editedIndex) {
-        this.appMainObservableList = tvObservableList;
-        this.editedIndex = editedIndex;
-        this.tfId.setText(String.valueOf(tvObservableList.get(editedIndex).getId()));
-        this.tfName.setText(tvObservableList.get(editedIndex).getName());
-        this.tfAge.setText(String.valueOf(tvObservableList.get(editedIndex).getAge()));
-
+    public void setModel(EmployeeModel model) {
+        this.tfId.setText(String.valueOf(model.getId()));
+        this.tfName.setText(model.getName());
+        this.tfAge.setText(String.valueOf(model.getAge()));
     }
 
     private void closeStage(ActionEvent event) {

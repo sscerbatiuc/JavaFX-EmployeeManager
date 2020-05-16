@@ -1,10 +1,7 @@
 package edu.step.javafxtabledemo;
 
 import edu.step.javafxtabledemo.model.EmployeeModel;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,35 +11,42 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 public class MainSceneController implements Initializable {
 
     @FXML
-    private TableView<EmployeeModel> tvData;
+    private TableView<EmployeeModel> table;
     @FXML
-    private TableColumn colId;
+    private TableColumn<EmployeeModel, Integer> colId;
     @FXML
-    private TableColumn colName;
+    private TableColumn<EmployeeModel, String> colName;
     @FXML
-    private TableColumn colAge;
+    private TableColumn<EmployeeModel, Integer> colAge;
 
-    private final ObservableList<EmployeeModel> tvObservableList = FXCollections.observableArrayList();
+    /**
+     * Configure the observable list to listen for the modifications inside the
+     * EmployeeModel objects.
+     */
+    private final ObservableList<EmployeeModel> obsList = FXCollections.observableArrayList(
+            (EmployeeModel model) -> new Observable[]{model.idProperty(), model.nameProperty(), model.ageProperty()}
+    );
 
     @FXML
     void onOpenAddDialog(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddDialog.fxml"));
         Parent parent = fxmlLoader.load();
         AddDialogController dialogController = (AddDialogController) fxmlLoader.getController();
-        dialogController.setAppMainObservableList(tvObservableList);
+        dialogController.setAppMainObservableList(obsList);
 
         Scene scene = new Scene(parent, 300, 200);
         Stage stage = new Stage();
@@ -54,34 +58,35 @@ public class MainSceneController implements Initializable {
 
     @FXML
     void onOpenEditDialog(ActionEvent event) throws IOException {
-        int selectedRow = this.tvData.getSelectionModel().getSelectedIndex();
+        int selectedRow = this.table.getSelectionModel().getSelectedIndex();
         if (selectedRow != -1) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/EditDialog.fxml"));
             Parent parent = fxmlLoader.load();
-            EditDialogController dialogController = (EditDialogController) fxmlLoader.getController();
-            dialogController.setObservableList(tvObservableList, selectedRow);
+            EditDialogController dialogController = fxmlLoader.getController();
+            dialogController.setModel(obsList.get(selectedRow));
 
-            Scene scene = new Scene(parent, 300, 200);
             Stage stage = new Stage();
             stage.setTitle("Edit employee");
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(scene);
+            stage.setScene(new Scene(parent, 300, 200));
             stage.showAndWait();
+            obsList.get(selectedRow).setId(dialogController.result.getId());
+            obsList.get(selectedRow).setAge(dialogController.result.getAge());
+            obsList.get(selectedRow).setName(dialogController.result.getName());
         }
     }
 
     @FXML
     void onDeleteEmployee() {
-        int selectedRow = this.tvData.getSelectionModel().getSelectedIndex();
+        int selectedRow = this.table.getSelectionModel().getSelectedIndex();
         if (selectedRow != -1) {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
+            Alert alert = new Alert(AlertType.CONFIRMATION, "This action cannot be undone");
             alert.setTitle("Please confirm");
             alert.setHeaderText("Are you sure you want to delete this user?");
-            alert.setContentText("This action cannot be undone");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                this.tvObservableList.remove(selectedRow);
+                this.obsList.remove(selectedRow);
             }
         }
     }
@@ -91,16 +96,30 @@ public class MainSceneController implements Initializable {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
-        tvData.setItems(tvObservableList);
-        tvData.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
+        table.setItems(obsList);
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        tvObservableList.addListener((ListChangeListener) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                   // DAO.addEmployee()
-                    System.out.println(tvObservableList.get(change.getFrom()));
-                } else if (change.wasUpdated()){
-                    // DAO.updateEmployee();
+        obsList.addListener(new ListChangeListener<EmployeeModel>() {
+            @Override
+            public void onChanged(Change<? extends EmployeeModel> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            System.out.println("Permuted: " + i + " " + obsList.get(i));
+                        }
+                    } else if (change.wasUpdated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            System.out.println("Updated: " + i + " " + obsList.get(i));
+                        }
+                    } else {
+                        change.getRemoved().forEach((removedItem) -> {
+                            System.out.println("Removed: " + removedItem);
+                        });
+                        change.getAddedSubList().forEach((addedItem) -> {
+                            System.out.println("Added: " + addedItem);
+                        });
+                    }
                 }
             }
         });
